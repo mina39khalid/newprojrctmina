@@ -1,5 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:dot_navigation_bar/dot_navigation_bar.dart';
+import 'package:toters_dna/UI/screen/authentication/orderPage.dart';
+import 'package:toters_dna/UI/screen/authentication/order3.dart';
+import 'dart:convert';
+import 'package:http/http.dart';
+var text_offer=[""];
+var mintext=[""];
+var img=[""];
+var tag_rate=[];
+var tag_resturant=[""];
+var location=[""];
+var test_offer2=[""];
+var mintext2=[""];
+var resturant=[""];
+var imagrest=[""];
+var description=[""];
+var name=[""];
+var type=[""];
+var time=[""];
+var food=[""];
+var note=[""];
+var imgo=[""];
+var nameo=[""];
+var costo=[""];
 
 class burger extends StatefulWidget {
   final String Images;
@@ -38,6 +61,97 @@ class _burgerState extends State<burger> {
     setState(() {
       _selectedTab = _SelectedTab.values[i];
     });
+  }
+  Future getData() async{
+    var url=Uri.parse("http://localhost:4000/main");
+    Response response= await get(url);
+
+    String body =response.body;
+
+    List<dynamic> list1=json.decode(body);
+    text_offer.clear();
+    mintext.clear();
+    img.clear();
+    tag_rate.clear();
+    tag_resturant.clear();
+    location.clear();
+    test_offer2.clear();
+    mintext2.clear();
+    resturant.clear();
+    food.clear();
+    note.clear();
+    for (int i=0; i<list1.length; i++){
+      setState(() {
+        text_offer.add("${list1[i]["text_offer"]}");
+        mintext.add("${list1[i]["mintext"]}");
+        img.add("${list1[i]["img"]}");
+        tag_rate.add("${list1[i]["tag_rate"]}");
+        tag_resturant.add("${list1[i]["tag_resturant"]}");
+        location.add("${list1[i]["loction"]}");
+        test_offer2.add("${list1[i]["test_offer2"]}");
+        mintext2.add("${list1[i]["mintext2"]}");
+        food.add("${list1[i]["food"]}");
+        note.add("${list1[i]["note"]}");
+
+      });
+      print(list1);
+    }
+  }
+
+  Future getData2() async{
+    var url=Uri.parse("http://localhost:4000/rest");
+    Response response= await get(url);
+
+    String body =response.body;
+
+    List<dynamic> list1=json.decode(body);
+    imagrest.clear();
+    time.clear();
+    description.clear();
+    name.clear();
+    type.clear();
+    for (int i=0; i<list1.length; i++){
+      setState(() {
+        imagrest.add("${list1[i]["img"]}");
+        time.add("${list1[i]["d_time"]}");
+        description.add("${list1[i]["description"]}");
+        name.add("${list1[i]["name"]}");
+        type.add("${list1[i]["type"]}");
+
+
+      });
+      print(list1);
+    }
+  }
+  Future getData3() async{
+    var url=Uri.parse("http://localhost:4000/order");
+    Response response= await get(url);
+
+    String body =response.body;
+
+    List<dynamic> list1=json.decode(body);
+
+    imgo.clear();
+    nameo.clear();
+    costo.clear();
+
+    for (int i=0; i<list1.length; i++){
+      setState(() {
+
+        nameo.add("${list1[i]["nameo"]}");
+        costo.add("${list1[i]["costo"]}");
+        imgo.add("${list1[i]["imgo"]}");
+
+      });
+      print(list1);
+    }
+  }
+
+  void initState(){
+    super.initState();
+    getData();
+    getData2();
+    getData3();
   }
   @override
   Widget build(BuildContext context) {
@@ -257,10 +371,96 @@ class _burgerState extends State<burger> {
                 ),
 
                 Text('"لفة جبيره و مشبعه والطعم طيب جداً راح تحس اكو اختلاف عن باقي مطاعم البركر "',style: TextStyle(fontSize: 8,color: Colors.grey),),
-              ],
+                Padding(
+                  padding: const EdgeInsets.only(top: 5,bottom: 5),
+                  child: Container(width: 370,height: 1,color: Colors.grey[400],),
+                ),
+                 Padding(
+                   padding: const EdgeInsets.only(right: 15),
+                   child: Row( mainAxisAlignment: MainAxisAlignment.end,
+                     children: [
+                       Text('شائع',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),),
+                     ],
+                   ),
+                 ),
 
+          Padding(
+            padding: const EdgeInsets.only(right: 10,left: 10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                GestureDetector(
+                onTap: () {
+          Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => order()));
+          },
+            child:Column(
+                  children: [
+                    Container(
+                      width: 180,
+                      height: 130,
+                      decoration: BoxDecoration(
+                        color: Colors.pink,
+                        borderRadius: BorderRadius.circular(20),
+                        image: DecorationImage(
+                            fit: BoxFit.cover,
+                            image: NetworkImage(imgo[0])
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 10),
+                      child: Column(
+                        children: [
+                          Text(nameo[0],style: TextStyle(fontSize: 20),),
+                          Row(
+                            children: [
+                              Text(costo[0],style: TextStyle(color: Colors.greenAccent),),
+                              Text('د.ع',style: TextStyle(color: Colors.greenAccent),),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),),
+                SizedBox(width: 10,),
+        GestureDetector(
+          onTap: () {
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => order3()));
+          },
+          child: Column(
+                  children: [
+                    Container(
+                      width: 180,
+                      height: 130,
+                      decoration: BoxDecoration(
+                        color: Colors.pink,
+                        borderRadius: BorderRadius.circular(20),
+                        image: DecorationImage(
+                            fit: BoxFit.cover,
+                            image: NetworkImage('https://images.pexels.com/photos/1301373/pexels-photo-1301373.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1')
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 10),
+                      child: Column(
+                        children: [
+                          Text('فنكر',style: TextStyle(fontSize: 20),),
+                          Text('د.ع2000',style: TextStyle(color: Colors.greenAccent),),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),)
+              ],
             ),
-          ],
+          )
+       ] )
+
+           ]
         ),
       ),
 

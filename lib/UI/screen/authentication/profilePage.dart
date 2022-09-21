@@ -5,6 +5,9 @@ import 'package:toters_dna/UI/screen/authentication/mainPageToters.dart';
 import 'package:toters_dna/UI/screen/authentication/reguestPage.dart';
 import 'package:toters_dna/UI/screen/authentication/searchPage.dart';
 import 'package:toters_dna/UI/screen/authentication/deliveryPage.dart';
+import 'dart:convert';
+import 'package:http/http.dart';
+var user=[""];
 
 class profilepage extends StatefulWidget {
   const profilepage({Key? key}) : super(key: key);
@@ -21,13 +24,36 @@ class _profilepageState extends State<profilepage> {
       _selectedTab = _SelectedTab.values[i];
     });
   }
+  Future getData() async{
+    var url=Uri.parse("http://localhost:4000/user");
+    Response response= await get(url);
+
+    String body =response.body;
+
+    List<dynamic> list1=json.decode(body);
+
+    user.clear();
+
+    for (int i=0; i<list1.length; i++){
+      setState(() {
+
+        user.add("${list1[i]["name"]}");
+      });
+      print(list1);
+    }
+  }
+  void initState(){
+    super.initState();
+    getData();
+
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.white,
-        title: Center(child: Text('Mina khalid',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color: Colors.black),)),
+        title: Center(child: Text(user[0],style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color: Colors.black),)),
       ),
       body: Padding(
           padding: const EdgeInsets.only(left: 15,right: 15),

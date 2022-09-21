@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:toters_dna/UI/screen/authentication/mainPageToters.dart';
+import 'package:toters_dna/UI/screen/authentication/order2.dart';
+import 'package:toters_dna/UI/screen/authentication/orderPage.dart';
+
+import 'UI/screen/splashscreen/splashscrrenView.dart';
 void main() {
-  runApp(MaterialApp(home: mypage(),debugShowCheckedModeBanner: false,));
+  runApp(MaterialApp(home: splash(),debugShowCheckedModeBanner: false,));
 }
 
 class MyApp extends StatelessWidget {

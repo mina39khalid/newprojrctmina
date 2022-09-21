@@ -1,3 +1,5 @@
+import 'dart:convert';
+import 'package:http/http.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_images/carousel_images.dart';
 import 'package:dot_navigation_bar/dot_navigation_bar.dart';
@@ -7,8 +9,22 @@ import 'package:toters_dna/UI/screen/authentication/resturantPage.dart';
 import 'package:toters_dna/UI/screen/authentication/searchPage.dart';
 import 'package:toters_dna/UI/screen/authentication/deliveryPage.dart';
 import 'package:toters_dna/UI/screen/authentication/resturant2Page.dart';
-
-
+var text_offer=[""];
+var mintext=[""];
+var img=[""];
+var tag_rate=[];
+var tag_resturant=[""];
+var location=[""];
+var test_offer2=[""];
+var mintext2=[""];
+var resturant=[""];
+var imagrest=[""];
+var description=[""];
+var name=[""];
+var type=[""];
+var time=[""];
+var food=[""];
+var note=[""];
 class mypage extends StatefulWidget {
   @override
   State<mypage> createState() => _mypageState();
@@ -22,17 +38,17 @@ class _mypageState extends State<mypage> {
       _selectedTab = _SelectedTab.values[i];
     });
   }
-  final List<String> listImages = [
-    'images/img_4.png',
-    'images/img_3.png',
-    'images/img_2.png'
-
-  ];
+  // final List<String> listImages = [
+  //   'images/img_4.png',
+  //   'images/img_3.png',
+  //   'images/img_2.png'
+  //
+  // ];
 
   final String textS = 'فاير فاير';
   final String num = '37 - 27';
   final String mint = 'دقائق';
-  final String img =
+  final String img2 =
       'https://images.pexels.com/photos/2983098/pexels-photo-2983098.jpeg?auto=compress&cs=tinysrgb&w=600';
   final String points = 'اكتساب نقاط';
   final String burg = 'برغر.';
@@ -51,9 +67,75 @@ class _mypageState extends State<mypage> {
   final String textsweet21 =
       'نقدم ألذ سندويشات البركر المميزة مع الصلصات ألامريكية والغريبه الخاصه';
 
+  Future getData() async{
+    var url=Uri.parse("http://localhost:4000/main");
+    Response response= await get(url);
+
+    String body =response.body;
+
+    List<dynamic> list1=json.decode(body);
+     text_offer.clear();
+     mintext.clear();
+     img.clear();
+    tag_rate.clear();
+    tag_resturant.clear();
+    location.clear();
+   test_offer2.clear();
+     mintext2.clear();
+     resturant.clear();
+     food.clear();
+     note.clear();
+    for (int i=0; i<list1.length; i++){
+      setState(() {
+        text_offer.add("${list1[i]["text_offer"]}");
+        mintext.add("${list1[i]["mintext"]}");
+        img.add("${list1[i]["img"]}");
+        tag_rate.add("${list1[i]["tag_rate"]}");
+        tag_resturant.add("${list1[i]["tag_resturant"]}");
+        location.add("${list1[i]["loction"]}");
+        test_offer2.add("${list1[i]["test_offer2"]}");
+        mintext2.add("${list1[i]["mintext2"]}");
+        food.add("${list1[i]["food"]}");
+        note.add("${list1[i]["note"]}");
+
+      });
+      print(list1);
+    }
+  }
+
+  Future getData2() async{
+    var url=Uri.parse("http://localhost:4000/rest");
+    Response response= await get(url);
+
+    String body =response.body;
+
+    List<dynamic> list1=json.decode(body);
+    imagrest.clear();
+    time.clear();
+    description.clear();
+    name.clear();
+    type.clear();
+    for (int i=0; i<list1.length; i++){
+      setState(() {
+        imagrest.add("${list1[i]["img"]}");
+        time.add("${list1[i]["d_time"]}");
+        description.add("${list1[i]["description"]}");
+        name.add("${list1[i]["name"]}");
+        type.add("${list1[i]["type"]}");
+
+        
+      });
+      print(list1);
+    }
+  }
+  void initState(){
+    super.initState();
+    getData();
+    getData2();
+  }
   @override
   Widget build(BuildContext context) {
-    var names = ['dna','mina'];
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -64,7 +146,7 @@ class _mypageState extends State<mypage> {
               width: 2,
             ),
             Icon(
-              Icons.list_outlined,
+              Icons.list,
               color: Colors.grey,
             ),
             SizedBox(
@@ -91,8 +173,9 @@ class _mypageState extends State<mypage> {
                       'توصيل الى',
                       style: TextStyle(color: Colors.black, fontSize: 10),
                     ),
+                    ///database
                     Text(
-                      'بغداد,العراق',
+                      location[0],
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
                           color: Colors.black,
@@ -110,7 +193,7 @@ class _mypageState extends State<mypage> {
           scrollDirection: Axis.vertical,
           child: Column(children: [
             Container(
-              height: 800,
+              height: MediaQuery.of(context).size.height,
               width: MediaQuery.of(context).size.width,
               child: Expanded(
                   child: ListView(
@@ -135,7 +218,9 @@ class _mypageState extends State<mypage> {
                       Column(
                         children: <Widget>[
                           CarouselImages(
-                            listImages: listImages,
+                           listImages: [
+                            img[0]
+                           ],
                             height: 195.0,
                             borderRadius: 15.0,
                             cachedNetworkImage: true,
@@ -175,13 +260,15 @@ class _mypageState extends State<mypage> {
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.end,
                                   children: [
+                                    ///database
                                     Text(
-                                      'شنو رأيك اليوم بوجبه مجانية؟',
+                                text_offer[0],
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold, fontSize: 18),
                                     ),
+                                    ///database
                                     Text(
-                                      'أستبدل نقاطك هسة واحصل على وجبه ومجانيه',
+                                    mintext[0] ,
                                       style: TextStyle(fontSize: 10),
                                     ),
                                   ],
@@ -205,23 +292,22 @@ class _mypageState extends State<mypage> {
                             onTap: () {
                               Navigator.of(context).push(MaterialPageRoute(
                                   builder: (context) => burger(
-                                    Images: img,
-                                    text1: textS,
-                                    Num1: num,
+                                    Images: imagrest[0],
+                                    Num1: time[0],
                                     Point: points,
-                                    Burg: burg,
-                                    Num2: '$doubleNum',
-                                    text2: text2,
+                                    Burg: type[0],
+                                    Num2: tag_rate[0],
+                                    text2: description[0],
                                     Min: mint,
+                                    text1: name[0],
                                   )));
                             },
                             child: Column(
                               children: [
                                 Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
                                     Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Stack(
                                           clipBehavior: Clip.none,
@@ -231,7 +317,7 @@ class _mypageState extends State<mypage> {
                                               height: 200,
                                               decoration: BoxDecoration(
                                                 image: DecorationImage(
-                                                    image: NetworkImage(img),
+                                                    image: NetworkImage(imagrest[0]),
                                                     fit: BoxFit.cover),
                                                 borderRadius:
                                                 BorderRadius.circular(15),
@@ -273,7 +359,7 @@ class _mypageState extends State<mypage> {
                                                     MainAxisAlignment.center,
                                                     children: [
                                                       Text(
-                                                        num,
+                                                        time[0],
                                                         style: TextStyle(
                                                             color: Colors.black,
                                                             fontSize: 10),
@@ -304,7 +390,7 @@ class _mypageState extends State<mypage> {
                                     Padding(
                                       padding: const EdgeInsets.only(left: 260),
                                       child: Text(
-                                        textS,
+                                        name[0],
                                         style: TextStyle(
                                             fontSize: 17,
                                             fontWeight: FontWeight.bold),
@@ -316,7 +402,7 @@ class _mypageState extends State<mypage> {
                                         mainAxisAlignment: MainAxisAlignment.end,
                                         children: [
                                           Text(
-                                            burg,
+                                            type[0],
                                             style: TextStyle(
                                                 fontSize: 15, color: Colors.black),
                                           ),
@@ -380,7 +466,7 @@ class _mypageState extends State<mypage> {
                                                   Icons.star,
                                                   color: Colors.greenAccent,
                                                 ),
-                                                Text('$doubleNum')
+                                                Text(tag_rate[0])
                                               ],
                                             ),
                                           ),
@@ -391,7 +477,7 @@ class _mypageState extends State<mypage> {
                                       height: 13,
                                     ),
                                     Text(
-                                      text2,
+                                      description[0],
                                       style:
                                       TextStyle(color: Colors.grey, fontSize: 10),
                                     )
@@ -405,13 +491,13 @@ class _mypageState extends State<mypage> {
                             onTap: () {
                               Navigator.of(context).push(MaterialPageRoute(
                                   builder: (context) => sweet(
-                                      Imagessweet : Imagessweet1,
-                                      textsweet: textsweet1,
-                                      Numsweet: Numsweet1,
+                                      Imagessweet : imagrest[1],
+                                      textsweet: name[1],
+                                      Numsweet: time[1],
                                       Pointsweet: Pointsweet1,
-                                      sweett: sweet1,
-                                      Numsweet2: '$Numsweet21',
-                                      textsweet2: textsweet21,
+                                      sweett: type[1],
+                                      Numsweet2: tag_rate[0],
+                                      textsweet2: description[1],
                                       Minsweet:Minsweet1,
                                   ),),);
                             },
@@ -422,7 +508,6 @@ class _mypageState extends State<mypage> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Stack(
                                           clipBehavior: Clip.none,
@@ -432,7 +517,7 @@ class _mypageState extends State<mypage> {
                                               height: 200,
                                               decoration: BoxDecoration(
                                                 image: DecorationImage(
-                                                    image: NetworkImage(Imagessweet1),
+                                                    image: NetworkImage(imagrest[1]),
                                                     fit: BoxFit.cover),
                                                 borderRadius:
                                                 BorderRadius.circular(15),
@@ -503,7 +588,7 @@ class _mypageState extends State<mypage> {
                                           mainAxisAlignment: MainAxisAlignment.end,
                                           children: [
                                             Text(
-                                                textsweet1,
+                                                name[1],
                                                 style: TextStyle(
                                                     fontSize: 17,
                                                     fontWeight: FontWeight.bold),
@@ -516,12 +601,12 @@ class _mypageState extends State<mypage> {
 
                                         children: [
                                           Text(
-                                            sweet1,
+                                            type[1],
                                             style: TextStyle(
                                                 fontSize: 15, color: Colors.black),
                                           ),
                                           Text(
-                                            '\$\$',
+                                            '\$\$\$',
                                             style: TextStyle(
                                                 fontSize: 10,
                                                 color: Colors.grey[600]),
@@ -579,7 +664,7 @@ class _mypageState extends State<mypage> {
                                                   Icons.star,
                                                   color: Colors.greenAccent,
                                                 ),
-                                                Text('$Numsweet21')
+                                                Text(tag_rate[0])
                                               ],
                                             ),
                                           ),
@@ -590,7 +675,7 @@ class _mypageState extends State<mypage> {
                                       height: 13,
                                     ),
                                     Text(
-                                      text2,
+                                      description[1],
                                       style:
                                       TextStyle(color: Colors.grey, fontSize: 10),
                                     )
@@ -605,7 +690,451 @@ class _mypageState extends State<mypage> {
 
                         ],
                       ),
-                     SizedBox(height: 200,)
+                      Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(left: 5, right: 5),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Icon(
+                                  Icons.arrow_back_ios_new,
+                                  color: Colors.greenAccent,
+                                  size: 20,
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    ///database
+                                    Text(
+                                      test_offer2[0],
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold, fontSize: 18),
+                                    ),
+                                    ///database
+                                    Text(
+                                      mintext2[0] ,
+                                      style: TextStyle(fontSize: 10),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Container(
+                              height: MediaQuery.of(context).size.width,
+                              child: ListView.builder( scrollDirection: Axis.horizontal,
+                                  itemCount: 3,
+                                  itemBuilder: (BuildContext context ,int index)
+                                  { return Row( mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      GestureDetector(
+                                        onTap: () {
+                                          Navigator.of(context).push(MaterialPageRoute(
+                                              builder: (context) => burger(
+                                                Images: imagrest[0],
+                                                Num1: time[0],
+                                                Point: points,
+                                                Burg: type[0],
+                                                Num2: tag_rate[0],
+                                                text2: description[0],
+                                                Min: mint,
+                                                text1: name[0],
+                                              )));
+                                        },
+                                        child: Column(
+                                          children: [
+                                            Row(
+                                              mainAxisAlignment: MainAxisAlignment.end,
+                                              children: [
+                                                Column(
+                                                  children: [
+                                                    Stack(
+                                                      clipBehavior: Clip.none,
+                                                      children: [
+                                                        Container(
+                                                          width: 350,
+                                                          height: 200,
+                                                          decoration: BoxDecoration(
+                                                            image: DecorationImage(
+                                                                image: NetworkImage(imagrest[0]),
+                                                                fit: BoxFit.cover),
+                                                            borderRadius:
+                                                            BorderRadius.circular(15),
+                                                          ),
+                                                        ),
+                                                        Positioned(
+                                                          top: -5.0,
+                                                          right: 270.0,
+                                                          left: 10.0,
+                                                          child: Container(
+                                                              width: 60,
+                                                              height: 70,
+                                                              child: Icon(
+                                                                Icons.favorite_outline_sharp,
+                                                                size: 35,
+                                                                color: Colors.white,
+                                                              )),
+                                                        ),
+                                                        Positioned(
+                                                          top: 160,
+                                                          left: 20,
+                                                          child: Container(
+                                                              width: 80,
+                                                              height: 50,
+                                                              decoration: BoxDecoration(
+                                                                borderRadius:
+                                                                BorderRadius.circular(6),
+                                                                boxShadow: [
+                                                                  BoxShadow(
+                                                                      spreadRadius: 1,
+                                                                      blurRadius: 10,
+                                                                      color: Colors.black12,
+                                                                      offset: Offset(0, 1)),
+                                                                ],
+                                                                color: Colors.white,
+                                                              ),
+                                                              child: Column(
+                                                                mainAxisAlignment:
+                                                                MainAxisAlignment.center,
+                                                                children: [
+                                                                  Text(
+                                                                    time[0],
+                                                                    style: TextStyle(
+                                                                        color: Colors.black,
+                                                                        fontSize: 10),
+                                                                  ),
+                                                                  Text(
+                                                                    mint,
+                                                                    style: TextStyle(
+                                                                        color: Colors.grey,
+                                                                        fontSize: 8),
+                                                                  ),
+                                                                ],
+                                                              )),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                            SizedBox(
+                                              height: 10,
+                                            ),
+                                            Column(
+                                              children: [
+                                                SizedBox(
+                                                  width: 60,
+                                                ),
+                                                Padding(
+                                                  padding: const EdgeInsets.only(left: 260),
+                                                  child: Text(
+                                                    name[0],
+                                                    style: TextStyle(
+                                                        fontSize: 17,
+                                                        fontWeight: FontWeight.bold),
+                                                  ),
+                                                ),
+                                                Padding(
+                                                  padding: const EdgeInsets.only(right: 30),
+                                                  child: Row(
+                                                    mainAxisAlignment: MainAxisAlignment.end,
+                                                    children: [
+                                                      Text(
+                                                        type[0],
+                                                        style: TextStyle(
+                                                            fontSize: 15, color: Colors.black),
+                                                      ),
+                                                      Text(
+                                                        '\$\$',
+                                                        style: TextStyle(
+                                                            fontSize: 10,
+                                                            color: Colors.grey[600]),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  height: 10,
+                                                ),
+                                                Row(
+                                                  mainAxisAlignment: MainAxisAlignment.end,
+                                                  children: [
+                                                    Container(
+                                                      width: 110,
+                                                      height: 40,
+                                                      decoration: BoxDecoration(
+                                                          color: Colors.blueGrey[100],
+                                                          borderRadius: BorderRadius.circular(8)),
+                                                      child: Row(
+                                                        mainAxisAlignment:
+                                                        MainAxisAlignment.center,
+                                                        children: [
+                                                          Row(
+                                                            children: [
+                                                              Text(
+                                                                points,
+                                                                style: TextStyle(
+                                                                    color: Colors.blueAccent,
+                                                                    fontSize: 10),
+                                                              ),
+                                                              Icon(
+                                                                Icons.plus_one,
+                                                                color: Colors.blueAccent,
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                    Padding(
+                                                      padding: const EdgeInsets.only(
+                                                          left: 10, right: 25),
+                                                      child: Container(
+                                                        width: 70,
+                                                        height: 40,
+                                                        decoration: BoxDecoration(
+                                                            color: Colors.grey[200],
+                                                            borderRadius:
+                                                            BorderRadius.circular(10)),
+                                                        child: Row(
+                                                          mainAxisAlignment:
+                                                          MainAxisAlignment.center,
+                                                          children: [
+                                                            Icon(
+                                                              Icons.star,
+                                                              color: Colors.greenAccent,
+                                                            ),
+                                                            Text(tag_rate[0])
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                SizedBox(
+                                                  height: 13,
+                                                ),
+                                                Text(
+                                                  description[0],
+                                                  style:
+                                                  TextStyle(color: Colors.grey, fontSize: 10),
+                                                )
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      SizedBox(width: 10,),
+                                      GestureDetector(
+                                        onTap: () {
+                                          Navigator.of(context).push(MaterialPageRoute(
+                                            builder: (context) => sweet(
+                                              Imagessweet : imagrest[1],
+                                              textsweet: name[1],
+                                              Numsweet: time[1],
+                                              Pointsweet: Pointsweet1,
+                                              sweett: type[1],
+                                              Numsweet2: tag_rate[1],
+                                              textsweet2: description[1],
+                                              Minsweet:Minsweet1,
+                                            ),),);
+                                        },
+
+                                        child: Column(
+                                          children: [
+                                            Row(
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              children: [
+                                                Column(
+                                                  children: [
+                                                    Stack(
+                                                      clipBehavior: Clip.none,
+                                                      children: [
+                                                        Container(
+                                                          width: 350,
+                                                          height: 200,
+                                                          decoration: BoxDecoration(
+                                                            image: DecorationImage(
+                                                                image: NetworkImage(imagrest[1]),
+                                                                fit: BoxFit.cover),
+                                                            borderRadius:
+                                                            BorderRadius.circular(15),
+                                                          ),
+                                                        ),
+                                                        Positioned(
+                                                          top: -5.0,
+                                                          right: 270.0,
+                                                          left: 10.0,
+                                                          child: Container(
+                                                              width: 60,
+                                                              height: 70,
+                                                              child: Icon(
+                                                                Icons.favorite_outline_sharp,
+                                                                size: 35,
+                                                                color: Colors.white,
+                                                              )),
+                                                        ),
+                                                        Positioned(
+                                                          top: 160,
+                                                          left: 20,
+                                                          child: Container(
+                                                              width: 80,
+                                                              height: 50,
+                                                              decoration: BoxDecoration(
+                                                                borderRadius:
+                                                                BorderRadius.circular(6),
+                                                                boxShadow: [
+                                                                  BoxShadow(
+                                                                      spreadRadius: 1,
+                                                                      blurRadius: 10,
+                                                                      color: Colors.black12,
+                                                                      offset: Offset(0, 1)),
+                                                                ],
+                                                                color: Colors.white,
+                                                              ),
+                                                              child: Column(
+                                                                mainAxisAlignment:
+                                                                MainAxisAlignment.center,
+                                                                children: [
+                                                                  Text(
+                                                                    Numsweet1,
+                                                                    style: TextStyle(
+                                                                        color: Colors.black,
+                                                                        fontSize: 10),
+                                                                  ),
+                                                                  Text(
+                                                                    Minsweet1,
+                                                                    style: TextStyle(
+                                                                        color: Colors.grey,
+                                                                        fontSize: 8),
+                                                                  ),
+                                                                ],
+                                                              )),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                            SizedBox(
+                                              height: 10,
+                                            ),
+                                            Column(
+                                              children: [
+                                                Row(
+                                                  mainAxisAlignment: MainAxisAlignment.end,
+                                                  children: [
+                                                    Text(
+                                                      name[1],
+                                                      style: TextStyle(
+                                                          fontSize: 17,
+                                                          fontWeight: FontWeight.bold),
+
+                                                    ),
+                                                  ],
+                                                ),
+                                                Row(
+                                                  mainAxisAlignment: MainAxisAlignment.end,
+
+                                                  children: [
+                                                    Text(
+                                                      type[1],
+                                                      style: TextStyle(
+                                                          fontSize: 15, color: Colors.black),
+                                                    ),
+                                                    Text(
+                                                      '\$\$\$',
+                                                      style: TextStyle(
+                                                          fontSize: 10,
+                                                          color: Colors.grey[600]),
+                                                    ),
+                                                  ],
+                                                ),
+                                                SizedBox(
+                                                  height: 10,
+                                                ),
+                                                Row(
+                                                  mainAxisAlignment: MainAxisAlignment.end,
+                                                  children: [
+                                                    Container(
+                                                      width: 110,
+                                                      height: 40,
+                                                      decoration: BoxDecoration(
+                                                          color: Colors.blueGrey[100],
+                                                          borderRadius: BorderRadius.circular(8)),
+                                                      child: Row(
+                                                        mainAxisAlignment:
+                                                        MainAxisAlignment.center,
+                                                        children: [
+                                                          Row(
+                                                            children: [
+                                                              Text(
+                                                                Pointsweet1,
+                                                                style: TextStyle(
+                                                                    color: Colors.blueAccent,
+                                                                    fontSize: 10),
+                                                              ),
+                                                              Icon(
+                                                                Icons.plus_one,
+                                                                color: Colors.blueAccent,
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                    Padding(
+                                                      padding: const EdgeInsets.only(
+                                                          left: 10, right: 25),
+                                                      child: Container(
+                                                        width: 70,
+                                                        height: 40,
+                                                        decoration: BoxDecoration(
+                                                            color: Colors.grey[200],
+                                                            borderRadius:
+                                                            BorderRadius.circular(10)),
+                                                        child: Row(
+                                                          mainAxisAlignment:
+                                                          MainAxisAlignment.center,
+                                                          children: [
+                                                            Icon(
+                                                              Icons.star,
+                                                              color: Colors.greenAccent,
+                                                            ),
+                                                            Text(tag_rate[0])
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                SizedBox(
+                                                  height: 13,
+                                                ),
+                                                Text(
+                                                  description[1],
+                                                  style:
+                                                  TextStyle(color: Colors.grey, fontSize: 10),
+                                                )
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ),SizedBox(width: 10,),
+                                    ],);}),
+                            ),
+                          ),
+SizedBox(height: 100,)
+                        ],
+                      ),
                     ],
                   )),
             ),
